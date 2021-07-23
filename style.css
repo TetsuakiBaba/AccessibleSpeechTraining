@@ -1,0 +1,8 @@
+canvas#gauge {
+    width: 100% !important;
+    height: auto !important;
+}
+canvas#gauge_ave {
+    width: 100% !important;
+    height: auto !important;
+}

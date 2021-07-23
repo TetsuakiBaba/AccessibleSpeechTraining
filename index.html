@@ -1,0 +1,116 @@
+<html lang="ja">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.min.js"
+        integrity="sha512-WIklPM6qPCIp6d3fSSr90j+1unQHUOoWDS4sdTiR8gxUTnyZ8S2Mr8e10sKKJ/bhJgpAa/qG068RDkg6fIlNFA=="
+        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+        crossorigin="anonymous"></script>
+    <link href="style.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div class="container-sm">
+        <div class="row">
+            <div class="col-12">
+                <h3>Accessible Speech Training
+                </h3>
+            </div>
+        </div>
+        <p id="text_debug"></p>
+        <div class="row">
+            <div class="input-group mb-3">
+                <button class="btn btn-outline-secondary" type="button" id="button_start_or_stop">Start</button>
+                <input type="text" class="form-control" placeholder="" aria-label="Example text with button addon"
+                    aria-describedby="button-addon1" id="text">
+                <span id="label" class="input-group-text">quiet</span>
+            </div>
+        </div>
+
+
+        <hr>
+
+        <div class="row">
+            <div class="col-12">
+                <p class="text-center">
+                    Character per Minute [CPM]
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 canvas-preview" style="width:100%;">
+                <canvas id="gauge"></canvas>
+            </div>
+
+        </div>
+        <canvas id="myChart"></canvas>
+
+
+        <div id="liveToast" class="toast position-fixed align-items-center text-black bg-warning border-0 top-0 end-0"
+            role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <!-- <img src="..." class="rounded me-2" alt="..."> -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                    class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img"
+                    aria-label="Warning:">
+                    <path
+                        d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                </svg>
+                <strong class="me-auto">指示代名詞発話チェッカー</strong>
+                <small>just now</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div id="toast-body" class="toast-body">
+            </div>
+
+        </div>
+
+
+        <!-- <div class="bg-primary position-fixed top-0 end-0 p-3" style="z-index: 11">
+            <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <img src="..." class="rounded mr-2" alt="">
+                    <strong class="me-auto">指示代名詞チェッカー</strong>
+                    <small>注意してください</small>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="閉じる"></button>
+                </div>
+                <div class="toast-body" id="toast-body">
+
+                </div>
+            </div>
+        </div> -->
+
+        <hr> Log
+        <br>
+        <textarea id="textarea" cols=50 rows=5></textarea><br>
+        <br>
+        <hr>
+        <p class="text-center">
+            2021 &copy; Tetsuaki Baba All rights reserved.
+        </p>
+
+        <script src="kuromoji/build/kuromoji.js"></script>
+        　　　　
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+
+        <script src="gauge.min.js"></script>
+        <script src="p5.speech.js"></script>
+        <script src="gauge_designs.js"></script>
+        <script src="utils.js"></script>
+        <script src="sketch.js"></script>
+        <script src="ContinuousSpeechRecognition.js"></script>
+
+    </div>
+</body>
+
+</html>
