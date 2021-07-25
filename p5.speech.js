@@ -18,16 +18,16 @@
  *  Web Speech API: https://dvcs.w3.org/hg/speech-api/raw-file/tip/speechapi.html
  *  Web Speech Recognition API: https://dvcs.w3.org/hg/speech-api/raw-file/tip/speechapi.html
  */
-(function(root, factory) {
+(function (root, factory) {
     if (typeof define === 'function' && define.amd)
-        define('p5.speech', ['p5'], function(p5) {
+        define('p5.speech', ['p5'], function (p5) {
             (factory(p5));
         });
     else if (typeof exports === 'object')
         factory(require('../p5'));
     else
         factory(root['p5']);
-}(this, function(p5) {
+}(this, function (p5) {
     // =============================================================================
     //                         p5.Speech
     // =============================================================================
@@ -39,7 +39,7 @@
      * @class p5.Speech
      * @constructor
      */
-    p5.Speech = function(_dv, _callback) {
+    p5.Speech = function (_dv, _callback) {
 
         //
         // speech synthesizers consist of a single synthesis engine
@@ -70,6 +70,8 @@
         this.onPause; // ...is paused...
         this.onResume; // ...resumes...
         this.onEnd; // ...and ends.
+        this.onSoundStart;
+        this.onSoundEnd;
 
         this.voices = []; // array of available voices (dependent on browser/OS)
 
@@ -86,7 +88,7 @@
         // 
         // we use this function to load the voice array and bind our
         // custom callback functions.
-        window.speechSynthesis.onvoiceschanged = function() {
+        window.speechSynthesis.onvoiceschanged = function () {
             if (that.isLoaded == 0) { // run only once
                 that.voices = window.speechSynthesis.getVoices();
                 that.isLoaded = 1; // we're ready
@@ -104,21 +106,27 @@
                 // bind other custom callbacks:
                 //
 
-                that.utterance.onstart = function(e) {
+                that.utterance.onstart = function (e) {
                     //console.log("STARTED");
                     if (that.onStart != undefined) that.onStart(e);
                 };
-                that.utterance.onpause = function(e) {
+                that.utterance.onpause = function (e) {
                     //console.log("PAUSED");
                     if (that.onPause != undefined) that.onPause(e);
                 };
-                that.utterance.onresume = function(e) {
+                that.utterance.onresume = function (e) {
                     //console.log("RESUMED");
                     if (that.onResume != undefined) that.onResume(e);
                 };
-                that.utterance.onend = function(e) {
+                that.utterance.onend = function (e) {
                     //console.log("ENDED");
                     if (that.onEnd != undefined) that.onEnd(e);
+                };
+                that.utterance.onsoundstart = function (e) {
+                    if (that.onSoundStart != undefined) that.onSoundStart(e);
+                };
+                that.utterance.onsoundend = function (e) {
+                    if (that.onSoundEnd != undefined) that.onSoundEnd(e);
                 };
             }
         };
@@ -127,7 +135,7 @@
 
 
     // listVoices() - dump voice names to javascript console:
-    p5.Speech.prototype.listVoices = function() {
+    p5.Speech.prototype.listVoices = function () {
         if (this.isLoaded) {
             for (var i = 0; i < this.voices.length; i++) {
                 console.log(this.voices[i].name);
@@ -139,36 +147,36 @@
 
     // setVoice() - assign voice to speech synthesizer, by name
     // (using voices found in the voices[] array), or by index.
-    p5.Speech.prototype.setVoice = function(_v) {
+    p5.Speech.prototype.setVoice = function (_v) {
         // type check so you can set by label or by index:
-        if (typeof(_v) == 'string') this.utterance.voice = this.voices.filter(function(v) { return v.name == _v; })[0];
-        else if (typeof(_v) == 'number') this.utterance.voice = this.voices[Math.min(Math.max(_v, 0), this.voices.length - 1)];
+        if (typeof (_v) == 'string') this.utterance.voice = this.voices.filter(function (v) { return v.name == _v; })[0];
+        else if (typeof (_v) == 'number') this.utterance.voice = this.voices[Math.min(Math.max(_v, 0), this.voices.length - 1)];
     };
 
     // volume of voice. API range 0.0-1.0.
-    p5.Speech.prototype.setVolume = function(_v) {
+    p5.Speech.prototype.setVolume = function (_v) {
         this.utterance.volume = Math.min(Math.max(_v, 0.0), 1.0);
     };
 
     // rate of voice.  not all voices support this feature.
     // API range 0.1-2.0.  voice will crash out of bounds.
-    p5.Speech.prototype.setRate = function(_v) {
+    p5.Speech.prototype.setRate = function (_v) {
         this.utterance.rate = Math.min(Math.max(_v, 0.1), 2.0);
     };
 
     // pitch of voice.  not all voices support this feature.
     // API range >0.0-2.0.  voice will crash out of bounds.
-    p5.Speech.prototype.setPitch = function(_v) {
+    p5.Speech.prototype.setPitch = function (_v) {
         this.utterance.pitch = Math.min(Math.max(_v, 0.01), 2.0);
     };
 
     // sets the language of the voice.
-    p5.Speech.prototype.setLang = function(_lang) {
+    p5.Speech.prototype.setLang = function (_lang) {
         this.utterance.lang = _lang;
     }
 
     // speak a phrase through the current synthesizer:
-    p5.Speech.prototype.speak = function(_phrase) {
+    p5.Speech.prototype.speak = function (_phrase) {
         if (this.interrupt) this.synth.cancel();
         this.utterance.text = _phrase;
 
@@ -176,41 +184,50 @@
     };
 
     // not working...
-    p5.Speech.prototype.pause = function() {
+    p5.Speech.prototype.pause = function () {
         this.synth.pause();
     };
 
     // not working...
-    p5.Speech.prototype.resume = function() {
+    p5.Speech.prototype.resume = function () {
         this.synth.resume();
     };
 
     // stop current utterance:
-    p5.Speech.prototype.stop = function() {
+    p5.Speech.prototype.stop = function () {
         // not working...
         //this.synth.stop();
         this.synth.cancel();
     };
 
     // kill synthesizer completely, clearing any queued utterances:
-    p5.Speech.prototype.cancel = function() {
+    p5.Speech.prototype.cancel = function () {
         this.synth.cancel(); // KILL SYNTH
     };
 
     // Setting callbacks with functions instead
-    p5.Speech.prototype.started = function(_cb) {
+    p5.Speech.prototype.started = function (_cb) {
         this.onStart = _cb;
     }
 
-    p5.Speech.prototype.ended = function(_cb) {
+    p5.Speech.prototype.ended = function (_cb) {
         this.onEnd = _cb;
     }
 
-    p5.Speech.prototype.paused = function(_cb) {
+    p5.Speech.prototype.soundstarted = function (_cb) {
+        this.onSoundStart = _cb;
+    }
+
+    p5.Speech.prototype.soundended = function (_cb) {
+        this.onSoundEnd = _cb;
+    }
+
+
+    p5.Speech.prototype.paused = function (_cb) {
         this.onPause = _cb;
     }
 
-    p5.Speech.prototype.resumed = function(_cb) {
+    p5.Speech.prototype.resumed = function (_cb) {
         this.onResume = _cb;
     }
 
@@ -225,7 +242,7 @@
      * @class p5.SpeechRec
      * @constructor
      */
-    p5.SpeechRec = function(_lang, _callback) {
+    p5.SpeechRec = function (_lang, _callback) {
 
         //
         // speech recognition consists of a recognizer object per 
@@ -259,6 +276,8 @@
         this.onStart; // fires when the recognition system is started...
         this.onError; // ...has a problem (e.g. the mic is shut off)...
         this.onEnd; // ...and ends (in non-continuous mode).
+        this.onSoundStart; // ...and ends (in non-continuous mode).
+        this.onSoundEnd; // ...and ends (in non-continuous mode).
         if (_callback !== undefined) this.onResult = _callback;
 
         // recognizer properties:
@@ -309,7 +328,7 @@
         // it fills up a JSON array internal to the webkitSpeechRecognition
         // object.  we reference it over in our struct here, and also copy 
         // out the most recently detected phrase and confidence value.
-        this.rec.onresult = function(e) {
+        this.rec.onresult = function (e) {
             that.resultJSON = e; // full JSON of callback event
             that.resultValue = e.returnValue; // was successful?
             // store latest result in top-level object struct
@@ -320,16 +339,22 @@
 
         // fires when the recognition system starts (i.e. when you 'allow'
         // the mic to be used in the browser).
-        this.rec.onstart = function(e) {
+        this.rec.onstart = function (e) {
             if (that.onStart != undefined) that.onStart(e);
+        };
+        this.rec.onsoundstart = function (e) {
+            if (that.onSoundStart != undefined) that.onSoundStart(e);
+        };
+        this.rec.onsoundend = function (e) {
+            if (that.onSoundEnd != undefined) that.onSoundEnd(e);
         };
         // fires on a client-side error (server-side errors are expressed 
         // by the resultValue in the JSON coming back as 'false').
-        this.rec.onerror = function(e) {
+        this.rec.onerror = function (e) {
             if (that.onError != undefined) that.onError(e);
         };
         // fires when the recognition finishes, in non-continuous mode.
-        this.rec.onend = function() {
+        this.rec.onend = function () {
             if (that.onEnd != undefined) that.onEnd();
         };
 
@@ -341,7 +366,7 @@
     // this one 'start' cycle.  if you need to recognize speech more
     // than once, use continuous mode rather than firing start() 
     // multiple times in a single script.
-    p5.SpeechRec.prototype.start = function(_continuous, _interim) {
+    p5.SpeechRec.prototype.start = function (_continuous, _interim) {
         if ('webkitSpeechRecognition' in window) {
             if (_continuous !== undefined) this.continuous = _continuous;
             if (_interim !== undefined) this.interimResults = _interim;
@@ -351,7 +376,7 @@
         }
     };
 
-    p5.SpeechRec.prototype.stop = function() {
+    p5.SpeechRec.prototype.stop = function () {
         if ('webkitSpeechRecognition' in window) {
             this.rec.stop();
         }

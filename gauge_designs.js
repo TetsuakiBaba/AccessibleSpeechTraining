@@ -16,7 +16,8 @@ var opts = {
     generateGradient: true,
     highDpiSupport: true,     // High resolution support
     staticZones: [
-        { strokeStyle: "#74C150", min: 0, max: 300 }, // Red from 100 to 130
+        { strokeStyle: "#A3DE18", min: 0, max: 200 },
+        { strokeStyle: "#74C150", min: 200, max: 300 }, // Red from 100 to 130
         { strokeStyle: "#F8C93A", min: 300, max: 450 }, // Yellow
         { strokeStyle: "#F1513A", min: 450, max: 600 } // Green
     ],
@@ -41,7 +42,7 @@ var target = document.getElementById('gauge'); // your canvas element
 var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
 gauge.maxValue = 600; // set max gauge value
 gauge.setMinValue(0);  // Prefer setter over gauge.minValue = 0
-gauge.animationSpeed = 2048 * 4; // set animation speed (32 is default value)
+gauge.animationSpeed = 2048; // set animation speed (32 is default value)
 gauge.set(0); // set actual value
 
 // var target = document.getElementById('gauge_ave'); // your canvas element
@@ -56,7 +57,7 @@ var ctx = document.getElementById('myChart').getContext('2d');
 var myChart = new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: ['これ', 'ここ', 'こちら', 'それ', 'そこ', 'そちら', 'あれ', 'あそこ', 'あちら'],
+        labels: ['これ', 'ここ', 'こちら', 'こっち', 'それ', 'そこ', 'そちら', 'そっち', 'あれ', 'あそこ', 'あちら', 'あっち'],
         datasets: [{
             label: '指示代名詞自動チェック',
             data: [0, 0, 0, 0, 0, 0, 0, 0, 0],
