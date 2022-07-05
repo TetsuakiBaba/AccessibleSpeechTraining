@@ -314,6 +314,7 @@
         // string.  this will be blown out and replaced at every firing of the
         // onresult() callback.
         this.resultString;
+        this.resultLatesString;
         // resultConfidence:
         // the 'confidence' (0-1) of the most recently recognized speech, e.g.
         // that it reflects what was actually spoken.  you can use this to filter
@@ -332,8 +333,12 @@
             that.resultJSON = e; // full JSON of callback event
             that.resultValue = e.returnValue; // was successful?
             // store latest result in top-level object struct
-            that.resultString = e.results[e.results.length - 1][0].transcript.trim();
+            that.resultLatestString = e.results[e.results.length - 1][0].transcript.trim();
             that.resultConfidence = e.results[e.results.length - 1][0].confidence;
+            that.resultString = "";
+            for (let i = 0; i < e.results.length; i++) {
+                that.resultString += e.results[i][0].transcript.trim();  // store all transcript.
+            }
             if (that.onResult != undefined) that.onResult();
         };
 

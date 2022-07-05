@@ -5,6 +5,10 @@ function createToast(message) {
     document.getElementById("toast-body").innerHTML = message;
     toast.show()
 
+
+    if (!feedback_speech.synth.speaking && is_audio_feedback_activated) {
+        feedback_speech.speak(message);
+    }
 }
 var toastTrigger = document.getElementById('liveToastBtn')
 var toastLiveExample = document.getElementById('liveToast')

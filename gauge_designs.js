@@ -1,4 +1,5 @@
 var opts = {
+    title: "test",
     angle: 0.20, // The span of the gauge arc
     lineWidth: 0.2, // The line thickness
     radiusScale: 0.99, // Relative radius
@@ -8,8 +9,8 @@ var opts = {
         strokeWidth: 0.035, // The thickness
         color: '#000000' // Fill color
     },
-    limitMax: false,     // If false, max value increases automatically if value > maxValue
-    limitMin: false,     // If true, the min value of the gauge will be fixed
+    limitMax: true,     // If false, max value increases automatically if value > maxValue
+    limitMin: true,     // If true, the min value of the gauge will be fixed
     colorStart: '#6FADCF',   // Colors
     colorStop: '#8FC0DA',    // just experiment with them
     strokeColor: '#E0E0E0',  // to see which ones work best for you
@@ -42,7 +43,7 @@ var target = document.getElementById('gauge'); // your canvas element
 var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
 gauge.maxValue = 600; // set max gauge value
 gauge.setMinValue(0);  // Prefer setter over gauge.minValue = 0
-gauge.animationSpeed = 2048; // set animation speed (32 is default value)
+gauge.animationSpeed = 512; // set animation speed (32 is default value)
 gauge.set(0); // set actual value
 
 // var target = document.getElementById('gauge_ave'); // your canvas element
@@ -60,7 +61,7 @@ var myChart = new Chart(ctx, {
         labels: ['これ', 'ここ', 'こちら', 'こっち', 'それ', 'そこ', 'そちら', 'そっち', 'あれ', 'あそこ', 'あちら', 'あっち'],
         datasets: [{
             label: '指示代名詞自動チェック',
-            data: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
@@ -71,6 +72,9 @@ var myChart = new Chart(ctx, {
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
                 'rgba(255, 206, 86, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)'
             ],
             borderColor: [
                 'rgba(255, 99, 132, 1)',
@@ -82,11 +86,21 @@ var myChart = new Chart(ctx, {
                 'rgba(255, 99, 132, 1)',
                 'rgba(54, 162, 235, 1)',
                 'rgba(255, 206, 86, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)'
             ],
             borderWidth: 1
         }]
     },
     options: {
+        title: {
+            display: false,
+            text: '指示代名詞自動カウント'
+        },
+        legend: {
+            display: false
+        },
         scales: {
             yAxes: [           // Ｙ軸 
                 {
@@ -102,5 +116,100 @@ var myChart = new Chart(ctx, {
                 beginAtZero: true
             }
         }
+    }
+});
+
+
+var ctx_warning_count = document.getElementById('warning_count').getContext('2d');
+var chart_warning_count = new Chart(ctx_warning_count, {
+    type: 'bar',
+    data: {
+        labels: ['CPM', '指示代名詞', 'フィラー', '長文'],
+        datasets: [{
+            data: [0, 0, 0, 0],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+            ],
+            borderWidth: 1
+        }
+        ]
+    },
+    options: {
+        title: {
+            display: false,
+            text: '警告回数'
+        },
+        legend: {
+            display: false
+        },
+        scales: {
+            yAxes: [           // Ｙ軸 
+                {
+                    ticks: {     // 目盛り        
+                        min: 0,      // 最小値
+                        // beginAtZero: true でも同じ
+                        //max: 25,     // 最大値
+                        stepSize: 1  // 間隔
+                    }
+                }
+            ],
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+
+var element_line_chart = document.getElementById("line_chart");
+
+var line_chart = new Chart(element_line_chart, {
+    type: 'line',
+    data: {
+        pointStyle: 'cross',
+        labels: [],
+        datasets: [
+            {
+                label: 'CPM履歴',
+                data: [],
+                borderColor: 'rgba(154, 154, 145, 1)',
+                backgroundColor: "rgba(0,0,0,0)"
+            },
+        ],
+    },
+    options: {
+        title: {
+            display: false,
+            text: 'CPM履歴'
+        },
+        legend: {
+            display: false
+        },
+        scales: {
+            yAxes: [{
+                ticks: {
+                    suggestedMax: 600,
+                    suggestedMin: 0,
+                    stepSize: 100,
+                    callback: function (value, index, values) {
+                        return value;
+                    }
+                }
+            }],
+            xAxes: [{
+                ticks: {
+                    stepSize: 10
+                }
+            }]
+        },
     }
 });

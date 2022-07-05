@@ -8,73 +8,127 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.min.js"
         integrity="sha512-WIklPM6qPCIp6d3fSSr90j+1unQHUOoWDS4sdTiR8gxUTnyZ8S2Mr8e10sKKJ/bhJgpAa/qG068RDkg6fIlNFA=="
         crossorigin="anonymous"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+        crossorigin="anonymous"></script> -->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
         crossorigin="anonymous"></script>
-    <link href="style.css" rel="stylesheet">
 
 </head>
 
 <body>
 
-    <div class="container-sm">
-        <div class="row">
-            <div class="col-12">
-                <h3>Accessible Speech Training
-                </h3>
+    <div class="container-sm mt-2">
+        <nav class="navbar fixed-top navbar-light position-relative">
+            <span class="position-absolute top-25 end-0 badge border-light text-dark p-1" style="font-size:0.7em;">
+                last update: 2022/07/05</span>
+            <div class="container-fluid">
+                <span class="navbar-brand mb-0 h1">
+                    <i class="bi bi-person-lines-fill"></i>
+                    Accessible Speech Training
+                </span>
             </div>
+        </nav>
+
+    </div>
+
+
+
+    <div class="container-sm">
+
+        <div class="alert alert-warning" role="alert" id="dict_loading">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <strong>Loading... 形態素解析辞書を読込中です。この表示が消えるまでしばらくお待ち下さい。</strong>
         </div>
+
+
         <p id="text_debug"></p>
         <div class="row">
             <div class="input-group mb-3">
-                <button class="btn btn-outline-secondary" type="button" id="button_start_or_stop">Start</button>
+                <button class="btn btn-outline-primary" type="button" id="button_start_or_stop" tabindex='1'>開始</button>
+
                 <input type="text" class="form-control" placeholder="" aria-label="Example text with button addon"
                     aria-describedby="button-addon1" id="text">
+
                 <span id="label" class="input-group-text">quiet</span>
+                <button class="btn btn-outline-danger" data-bs-toggle="button" type="button" id="button_audio_feedback"
+                    tabindex='2' value="false">音声フィードバック</button>
             </div>
         </div>
 
+        <div id="capture">
 
-        <hr>
-        <div class="row">
-            <div class="col-12">
-                <p class="text-center">
-                    Character per Minute [CPM]
-                </p>
+            <div class="row">
+                <div class="col-12 col-sm-6 canvas-preview mt-2">
+                    <div class="card card-body">
+                        <p class="text-sm-center">
+                            CPMメーター
+                        </p>
+                        <canvas id="gauge"></canvas>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 canvas-preview mt-2">
+                    <div class=" card card-body">
+                        <p class="text-sm-center">
+                            CPM履歴
+                        </p>
+
+                        <canvas id="line_chart"></canvas>
+                    </div>
+                </div>
+
             </div>
+
+            <div class="row">
+                <div class="col-12 col-sm-6 mt-2">
+                    <div class="card card-body">
+                        <p class="text-sm-center">
+                            指示代名詞自動チェック
+                        </p>
+                        <canvas id="myChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 mt-2">
+                    <div class="card card-body">
+                        <p class="text-sm-center">
+                            警告カウント
+                        </p>
+                        <canvas id="warning_count"></canvas>
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="liveToast"
+                class="toast position-fixed align-items-center text-black bg-warning border-0 top-0 end-0" role="alert"
+                aria-live="assertive" aria-atomic="true" style="z-index: 11">
+                <div class="toast-header">
+                    <!-- <img src="..." class="rounded me-2" alt="..."> -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                        class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img"
+                        aria-label="Warning:">
+                        <path
+                            d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                    </svg>
+                    <strong class="me-auto">Warning</strong>
+                    <small>just now</small>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div id="toast-body" class="toast-body">
+                </div>
+
+            </div>
+
         </div>
-
-        <div class="row">
-            <div class="col-12 canvas-preview" style="width:100%;">
-                <canvas id="gauge"></canvas>
-            </div>
-
-        </div>
-        <canvas id="myChart"></canvas>
-
-
-        <div id="liveToast" class="toast position-fixed align-items-center text-black bg-warning border-0 top-0 end-0"
-            role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header">
-                <!-- <img src="..." class="rounded me-2" alt="..."> -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-                    class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img"
-                    aria-label="Warning:">
-                    <path
-                        d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
-                </svg>
-                <strong class="me-auto">Warning</strong>
-                <small>just now</small>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-            <div id="toast-body" class="toast-body">
-            </div>
-
-        </div>
-
-
         <!-- <div class="bg-primary position-fixed top-0 end-0 p-3" style="z-index: 11">
             <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
                 <div class="toast-header">
@@ -89,25 +143,67 @@
             </div>
         </div> -->
 
-        <hr> Log
-        <br>
-        <textarea id="textarea" cols=50 rows=5></textarea><br>
-        <br>
-        <hr>
-        <p class="text-center">
-            2021 &copy; Tetsuaki Baba All rights reserved.
-        </p>
 
-        <script src="kuromoji/build/kuromoji.js"></script>
-        　　　　
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+        <div class="row mt-2">
+            <div class="col-12">
+                <a class="btn btn-outline-dark" data-bs-toggle="collapse" href="#collapseExample1" role="button"
+                    aria-expanded="false" aria-controls="collapseExample">
+                    詳細設定
+                </a>
+                <a class="btn btn-outline-dark" data-bs-toggle="collapse" href="#collapseExample2" role="button"
+                    aria-expanded="false" aria-controls="collapseExample">
+                    音声認識ログ
+                </a>
+                <a class="btn btn-outline-dark" data-bs-toggle="collapse" href="#collapseExample3" role="button"
+                    aria-expanded="false" aria-controls="collapseExample" onclick="downloadResultImage();">
+                    結果画像ダウンロード
+                </a>
+            </div>
 
-        <script src="gauge.min.js"></script>
-        <script src="p5.speech.js"></script>
-        <script src="gauge_designs.js"></script>
-        <script src="utils.js"></script>
-        <script src="sketch.js"></script>
-        <script src="ContinuousSpeechRecognition.js"></script>
+            <div class="collapse mt-2" id="collapseExample1">
+                <div class="card card-body">
+                    警告閾値
+                    <div class="row g-2">
+                        <div class="col-md">
+                            <div class="form-floating">
+                                <input type="number" class="form-control" id="number_cpm_threshold" value="400">
+                                <label for=" floatingInputGrid">ゆっくり話してください[CPM]</label>
+                            </div>
+                        </div>
+                        <div class="col-md">
+                            <div class="form-floating">
+                                <input type="number" class="form-control" id="number_speech_duration_threshold"
+                                    value="10">
+                                <label for=" floatingInputGrid">長い文章です[秒]</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="collapse mt-2" id="collapseExample2">
+                <div class="card card-body">
+                    <textarea id="textarea" cols=50 rows=5></textarea><br>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <hr>
+    <p class="text-center">
+        &copy; 2022 Tetsuaki Baba All rights reserved.
+        <a href="https://github.com/TetsuakiBaba/AccessibleSpeechTraining" target="_blank"><i
+                class="bi bi-github"></i></a>
+    </p>
+
+    <script src="kuromoji/build/kuromoji.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+    <script src="gauge.min.js"></script>
+    <script src="p5.speech.js"></script>
+    <script src="gauge_designs.js"></script>
+    <script src="utils.js"></script>
+    <script src="sketch.js"></script>
+    <script src="./html2canvas.min.js"></script>
 
     </div>
 </body>
