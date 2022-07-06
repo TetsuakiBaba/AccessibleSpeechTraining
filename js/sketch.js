@@ -136,7 +136,7 @@ function parseResult() {
         */
 
         cpm = cpm - (cpm - length_reading * duration_min) / 10;
-        console.log(cpm);
+        //console.log(cpm);
         //cpm = length_reading * duration_min;
         //console.log(timestamp.end - timestamp.start, length_reading, duration_min, cpm);
         if (cpm <= 600) {
@@ -197,7 +197,7 @@ function changedSpeechDurationThreshold() {
 
 
 function startSpeech() {
-    console.log("startSpeech()");
+    //console.log("startSpeech()");
 }
 
 function endSpeech() {
@@ -209,13 +209,13 @@ function endSpeech() {
             return;
         }
         if (myRec.resultString.length > 0) {
-            console.log("End");
+            //console.log("End");
             document.getElementById("label").innerHTML = "quiet";
             document.getElementById("textarea").innerHTML += myRec.resultString + "。";
             document.getElementById("text").value = "";
 
             var results = kuro.tokenize(myRec.resultString);
-            console.log(results);
+            //console.log(results);
             // let length_reading = 0;
             // for (result of results) {
             //     if (result.word_type === 'KNOWN') {
@@ -231,7 +231,7 @@ function endSpeech() {
                 createToast("ゆっくり話してください");
                 chart_warning_count.data.datasets[0].data[0]++;
             }
-            console.log(timestamp.end - timestamp.start, length_reading, duration_min, cpm);
+            //console.log(timestamp.end - timestamp.start, length_reading, duration_min, cpm);
             if (cpm <= 600) {
                 gauge.set(cpm); // set actual value
                 // feedback_speech
@@ -277,7 +277,7 @@ function endSpeech() {
                     chart_warning_count.data.datasets[0].data[2]++;
                 }
             }
-            console.log(results);
+            //console.log(results);
 
             myChart.update();
             chart_warning_count.update();
@@ -287,6 +287,6 @@ function endSpeech() {
         flg_first_parsing = true;
         flg_long_sentence_warning = false;
         myRec.start(); // start engine
-        console.log("start");
+        //console.log("start");
     }
 }

@@ -22,3 +22,4 @@ Accessible Speech Trainingはノートテイクを前提とした発表会や授
   * gauge.js, MIT License, https://bernii.github.io/gauge.js/
   * html2canvas.js, MIT License, https://html2canvas.hertzen.com/
   * p5.speech.js, MIT License, https://github.com/IDMNYU/p5.js-speech
+  * Chart.js, MIT License, https://www.chartjs.org/

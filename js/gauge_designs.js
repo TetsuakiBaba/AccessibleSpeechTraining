@@ -108,7 +108,7 @@ var myChart = new Chart(ctx, {
                         min: 0,      // 最小値
                         // beginAtZero: true でも同じ
                         //max: 25,     // 最大値
-                        stepSize: 1  // 間隔
+                        stepSize: 10  // 間隔
                     }
                 }
             ],
@@ -158,7 +158,7 @@ var chart_warning_count = new Chart(ctx_warning_count, {
                         min: 0,      // 最小値
                         // beginAtZero: true でも同じ
                         //max: 25,     // 最大値
-                        stepSize: 1  // 間隔
+                        stepSize: 10  // 間隔
                     }
                 }
             ],
@@ -175,17 +175,32 @@ var element_line_chart = document.getElementById("line_chart");
 var line_chart = new Chart(element_line_chart, {
     type: 'line',
     data: {
-        pointStyle: 'cross',
         labels: [],
         datasets: [
             {
                 label: 'CPM履歴',
                 data: [],
                 borderColor: 'rgba(154, 154, 145, 1)',
-                backgroundColor: "rgba(0,0,0,0)"
+                backgroundColor: "rgba(0,0,0,0)",
+                radius: 0,
+                tension: 0.1,
             },
         ],
     },
+    plugins: [{
+        afterDraw: chart => {
+            var ctx = chart.chart.ctx;
+            ctx.save();
+            //ctx.font = "14px Arial";
+            ctx.fillStyle = "black";
+            //ctx.textAlign = 'left';
+            //ctx.fillText('[CPM]', 0, 0);
+
+            ctx.textAlign = 'right';
+            ctx.fillText('[s]', chart.chart.width - 10, chart.chart.height - 25);
+            ctx.restore();
+        }
+    }],
     options: {
         title: {
             display: false,
@@ -207,7 +222,7 @@ var line_chart = new Chart(element_line_chart, {
             }],
             xAxes: [{
                 ticks: {
-                    stepSize: 10
+                    //stepSize: auto
                 }
             }]
         },

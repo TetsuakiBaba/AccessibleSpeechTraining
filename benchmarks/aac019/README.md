@@ -17,6 +17,15 @@
   * 400[CPM]読み上げ音声データ作成
     * say -r 210 -v kyoko -f yomi01_237.txt -o yomi01_237_400.aiff
 
+
 上記の通りで読み上げ音声データを作成し、作成した音声を[本システム](https://tetsuakibaba.jp/project/accessibleSpeech)に聞き取らせて結果を確認してください。PC内音声をアプリケーション内にて取り込むには loopback 等のソフトウェアもしくは、利用している音声ミキサーのLOOPBACK機能を用いると便利でしょう。
+
+最後に，計測した結果画像を以下に貼り付けておきます．順番に250,300,350,400[CPM]をターゲットにしたものです．結構きれいにCPMが推定できている様子がわかります．
+
+![target CPM:250](./yomi01_237_250.png)
+![target CPM:300](./yomi01_237_300.png)
+![target CPM:350](./yomi01_237_350.png)
+![target CPM:400](./yomi01_237_400.png)
+
 
 
