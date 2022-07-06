@@ -79,6 +79,15 @@ function downloadResultImage() {
 }
 function keyPressed() {
 
+    if (key == 'r') {
+        console.log(line_chart.data.datasets[0].data.length);
+
+        let sum = 0;
+        for (d of line_chart.data.datasets[0].data) {
+            sum += d;
+        }
+        console.log(sum / line_chart.data.datasets[0].data.length);
+    }
     // if (key == 't') {
     //     console.log("createToast")
     //     createToast("hello");
@@ -133,11 +142,12 @@ function parseResult() {
             //     createToast("ゆっくり話してください");
             // }
             line_chart.data.labels.push(str(parseInt(millis() / 1000)));
+            //line_chart.data.labels.push(line_chart.data.labels.length + 1);
             line_chart.data.datasets[0].data.push(cpm);
-            if (line_chart.data.labels.length > 20) {
+            if (line_chart.data.labels.length > 20000) {
                 line_chart.data.labels.shift();
             }
-            if (line_chart.data.datasets[0].data.length > 20) {
+            if (line_chart.data.datasets[0].data.length > 20000) {
                 line_chart.data.datasets[0].data.shift();
             }
             line_chart.update();
@@ -231,7 +241,7 @@ function endSpeech() {
                 if (line_chart.data.labels.length > 20000) {
                     line_chart.data.labels.shift();
                 }
-                if (line_chart.data.datasets[0].data.length > 20) {
+                if (line_chart.data.datasets[0].data.length > 20000) {
                     line_chart.data.datasets[0].data.shift();
                 }
                 line_chart.update();
