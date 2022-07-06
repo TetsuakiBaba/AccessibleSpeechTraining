@@ -88,6 +88,9 @@ function keyPressed() {
         }
         console.log(sum / line_chart.data.datasets[0].data.length);
     }
+    if (key == 't') {
+        createToast("test toast");
+    }
     // if (key == 't') {
     //     console.log("createToast")
     //     createToast("hello");

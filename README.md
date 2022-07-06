@@ -13,7 +13,10 @@ Accessible Speech Trainingはノートテイクを前提とした発表会や授
   * [第19回情報処理学会アクセシビリティ研究会発表分](./benchmarks/aac019/README.md)
     * 坊っちゃんの最初の237文字を250,300,350,400のCPM読み上げを行い，99-98%の精度でした．
 
-# License
+## How to Contribute
+  * issueに書き込んだり，PR送ってください．ベンチマークを取るだけでもありがたいです．
+
+## License
 本アプリケーションは以下のjsライブラリを利用しています．
   * Bootstrap, MIT Licenese, https://getbootstrap.com/
   * gauge.js, MIT License, https://bernii.github.io/gauge.js/
