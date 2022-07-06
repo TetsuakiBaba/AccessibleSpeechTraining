@@ -117,14 +117,16 @@ function parseResult() {
     timestamp.end = millis();
     var length_reading = myRec.resultString.length;
 
-    if (length_reading > 10) {
+    if (length_reading > 20) {
         let duration_min = (1000.0 * 60) / (timestamp.end - timestamp.start);
         /*
         ここでのcpmは参考値でよいため，差分加算で短い文章で急な値の情報や下降を控えておく
         */
-        cpm = cpm - (cpm - length_reading * duration_min) / 2;
+
+        cpm = cpm - (cpm - length_reading * duration_min) / 10;
+        console.log(cpm);
         //cpm = length_reading * duration_min;
-        console.log(timestamp.end - timestamp.start, length_reading, duration_min, cpm);
+        //console.log(timestamp.end - timestamp.start, length_reading, duration_min, cpm);
         if (cpm <= 600) {
             gauge.set(cpm); // set actual value
             // if (cpm > threshold.cpm) {
@@ -226,7 +228,7 @@ function endSpeech() {
 
                 line_chart.data.labels.push(str(parseInt(millis() / 1000)));
                 line_chart.data.datasets[0].data.push(cpm);
-                if (line_chart.data.labels.length > 20) {
+                if (line_chart.data.labels.length > 20000) {
                     line_chart.data.labels.shift();
                 }
                 if (line_chart.data.datasets[0].data.length > 20) {
