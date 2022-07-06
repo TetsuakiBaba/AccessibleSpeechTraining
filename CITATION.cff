@@ -7,6 +7,7 @@ message: >-
   If you use this software or code, please cite it as
   below.
 type: software
+url: "https://github.com/TetsuakiBaba/AccessibleSpeechTraining"
 authors:
   - given-names: Tetsuaki
     family-names: Baba
