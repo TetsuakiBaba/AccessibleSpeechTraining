@@ -16,10 +16,14 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <link href="./css/style.css" rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
         crossorigin="anonymous"></script>
+
 
 </head>
 
@@ -28,7 +32,7 @@
     <div class="container-sm mt-2">
         <nav class="navbar fixed-top navbar-light position-relative">
             <span class="position-absolute top-25 end-0 badge border-light text-dark p-1" style="font-size:0.7em;">
-                last update: 2022/07/06</span>
+                last update: 2022/07/30</span>
             <div class="container-fluid">
                 <span class="navbar-brand mb-0 h1">
                     <i class="bi bi-person-lines-fill"></i>
@@ -53,19 +57,71 @@
 
         <p id="text_debug"></p>
         <div class="row">
-            <div class="input-group mb-3">
-                <button class="btn btn-outline-primary" type="button" id="button_start_or_stop" tabindex='1'>開始</button>
+            <div class="col-2">
+                <div class="btn-group-vertical d-grid gap-0 mx-auto d-md-flex " role="group" aria-label="Basic example">
+                    <button class="btn btn-lg btn-outline-danger" type="button" data-bs-toggle="button"
+                        id="button_start_or_stop" tabindex='1'><i class="bi bi-mic-mute"></i></button>
 
-                <input type="text" class="form-control" placeholder="" aria-label="Example text with button addon"
-                    aria-describedby="button-addon1" id="text">
+                    <!-- <input type="text" class="form-control" placeholder="" aria-label="Example text with button addon"
+                    aria-describedby="button-addon1" id="text"> -->
 
-                <span id="label" class="input-group-text">quiet</span>
-                <button class="btn btn-outline-danger" data-bs-toggle="button" type="button" id="button_audio_feedback"
-                    tabindex='2' value="false">音声フィードバック</button>
+                    <!-- <span id="label" class="input-group-text">quiet</span> -->
+                    <button class="btn btn-lg btn-outline-danger" data-bs-toggle="button" type="button"
+                        id="button_audio_feedback" tabindex='2' value="false"><i class="bi bi-volume-mute"></i></button>
+
+                    <button class="btn btn-lg btn-outline-secondary" id="button_download"
+                        onclick="downloadResultImage();"><i class="bi bi-download"></i></button>
+                    <a class="btn btn-lg btn-outline-secondary" data-bs-toggle="collapse" href="#collapseExample1"
+                        role="button" aria-expanded="false" aria-controls="collapseExample">
+                        <i class="bi bi-gear"></i>
+                    </a>
+
+                    <button class="btn btn-lg btn-outline-secondary" id="button_trash"><i
+                            class="bi bi-trash"></i></button>
+                </div>
+            </div>
+            <div class="col-10">
+                <div class="card">
+                    <div class="card-header small text-muted">
+                        認識結果
+                    </div>
+                    <div class="card-body" id="cpm_warning">
+                        <p class="small" id="text_recognized"></p>
+
+
+                    </div>
+                </div>
+
+
+                <div class="collapse mt-2" id="collapseExample1">
+                    <div class="card">
+                        <div class="card-header small text-muted">
+                            Settings
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-md">
+                                <div class="form-floating">
+                                    <input type="number" class="form-control" id="number_cpm_threshold" value="400">
+                                    <label for=" floatingInputGrid">ゆっくり話してください[CPM]</label>
+                                </div>
+                            </div>
+                            <div class="col-md">
+                                <div class="form-floating">
+                                    <input type="number" class="form-control" id="number_speech_duration_threshold"
+                                        value="10">
+                                    <label for=" floatingInputGrid">長い文章です[秒]</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
             </div>
         </div>
 
-        <div id="capture">
+
+        <div class="mt-4" id="capture">
 
             <div class="row">
                 <div class="col-12 col-sm-6 canvas-preview mt-2">
@@ -146,40 +202,14 @@
 
         <div class="row mt-2">
             <div class="col-12">
-                <a class="btn btn-outline-dark" data-bs-toggle="collapse" href="#collapseExample1" role="button"
-                    aria-expanded="false" aria-controls="collapseExample">
-                    詳細設定
-                </a>
                 <a class="btn btn-outline-dark" data-bs-toggle="collapse" href="#collapseExample2" role="button"
                     aria-expanded="false" aria-controls="collapseExample">
                     音声認識ログ
                 </a>
-                <a class="btn btn-outline-dark" data-bs-toggle="collapse" href="#collapseExample3" role="button"
-                    aria-expanded="false" aria-controls="collapseExample" onclick="downloadResultImage();">
-                    結果画像ダウンロード
-                </a>
+
             </div>
 
-            <div class="collapse mt-2" id="collapseExample1">
-                <div class="card card-body">
-                    警告閾値
-                    <div class="row g-2">
-                        <div class="col-md">
-                            <div class="form-floating">
-                                <input type="number" class="form-control" id="number_cpm_threshold" value="400">
-                                <label for=" floatingInputGrid">ゆっくり話してください[CPM]</label>
-                            </div>
-                        </div>
-                        <div class="col-md">
-                            <div class="form-floating">
-                                <input type="number" class="form-control" id="number_speech_duration_threshold"
-                                    value="10">
-                                <label for=" floatingInputGrid">長い文章です[秒]</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
             <div class="collapse mt-2" id="collapseExample2">
                 <div class="card card-body">
                     <textarea id="textarea" cols=50 rows=5></textarea><br>
@@ -196,7 +226,7 @@
                 class="bi bi-github"></i></a>
     </p>
 
-    <script src="kuromoji/build/kuromoji.js"></script>
+    <script src="./kuromoji/build/kuromoji.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
     <script src="./js/gauge.min.js"></script>
     <script src="./js/p5.speech.js"></script>

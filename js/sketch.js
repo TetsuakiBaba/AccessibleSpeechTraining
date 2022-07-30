@@ -64,6 +64,9 @@ function setup() {
     select("#button_audio_feedback").mouseClicked(toggleAudioFeedback);
     select("#number_cpm_threshold").changed(changedCPMThreshold);
     select("#number_speech_duration_threshold").changed(changedSpeechDurationThreshold);
+    document.querySelector('#button_trash').addEventListener('click', function () {
+        clearPlotData();
+    })
 }
 
 function draw() { }
@@ -76,6 +79,24 @@ function downloadResultImage() {
         downloadEle.download = "Accessible_Speech_Training_result.png";
         downloadEle.click();
     });
+    createToast("画像をダウンロードしています");
+}
+
+function clearPlotData() {
+    line_chart.data.datasets[0].data = [];
+    line_chart.data.labels = [];
+    line_chart.update();
+    parsecpm = 0;
+    gauge.set(cpm);
+    for (let i = 0; i < myChart.data.datasets[0].data.length; i++) {
+        myChart.data.datasets[0].data[i] = 0;
+    }
+    myChart.update();
+    for (let i = 0; i < chart_warning_count.data.datasets[0].data.length; i++) {
+        chart_warning_count.data.datasets[0].data[i] = 0;
+    }
+    chart_warning_count.update();
+    createToast("グラフをリセットしました");
 }
 function keyPressed() {
 
@@ -89,7 +110,10 @@ function keyPressed() {
         console.log(sum / line_chart.data.datasets[0].data.length);
     }
     if (key == 't') {
-        createToast("test toast");
+        createToast("ここが通知が出る場所です");
+    }
+    if (key == 'r') {
+        clearPlotData();
     }
     // if (key == 't') {
     //     console.log("createToast")
@@ -122,12 +146,14 @@ function parseResult() {
             flg_long_sentence_warning = true;
         }
     }
-    document.getElementById("label").innerHTML = "speaking";// + str(nf((millis() - timestamp.start), 4, -1)) + "]";
-    document.getElementById("text").value = myRec.resultString;
+    document.querySelector("#text_recognized").innerText = myRec.resultString;
 
     //    document.getElementById("text_debug").innerHTML = myRec.resultString;
     timestamp.end = millis();
     var length_reading = myRec.resultString.length;
+
+    document.querySelector('#cpm_warning').style.backgroundColor = `hsl(0,${length_reading * 0.5}%,90%)`;
+    //document.querySelector('#cpm_alert').style.backgroundColor = `blue`;
 
     if (length_reading > 20) {
         let duration_min = (1000.0 * 60) / (timestamp.end - timestamp.start);
@@ -173,10 +199,10 @@ function toggleSpeechRecognition() {
     if (is_recognition_activated == true) {
         myRec.rec.lang = 'ja'; //document.getElementById("lang_speaking").value;
         myRec.start();
-        this.html("停止");
+        this.html(`<i class="bi bi-mic"></i>`);
     } else {
         myRec.stop();
-        this.html("開始");
+        this.html(`<i class="bi bi-mic-mute"></i>`);
     }
 }
 
@@ -185,6 +211,12 @@ function toggleSpeechRecognition() {
 var is_audio_feedback_activated = false;
 function toggleAudioFeedback() {
     is_audio_feedback_activated = !is_audio_feedback_activated;
+    if (is_audio_feedback_activated == true) {
+        this.html(`<i class="bi bi-volume-up"></i>`);
+    }
+    else {
+        this.html(`<i class="bi bi-volume-mute"></i>`);
+    }
 }
 
 
@@ -210,9 +242,7 @@ function endSpeech() {
         }
         if (myRec.resultString.length > 0) {
             //console.log("End");
-            document.getElementById("label").innerHTML = "quiet";
             document.getElementById("textarea").innerHTML += myRec.resultString + "。";
-            document.getElementById("text").value = "";
 
             var results = kuro.tokenize(myRec.resultString);
             //console.log(results);
@@ -225,31 +255,33 @@ function endSpeech() {
             let length_reading = myRec.resultString.length;
 
             timestamp.end = millis();
-            let duration_min = (1000.0 * 60) / (timestamp.end - timestamp.start);
-            cpm = length_reading * duration_min;
-            if (cpm > threshold.cpm) {
-                createToast("ゆっくり話してください");
-                chart_warning_count.data.datasets[0].data[0]++;
-            }
-            //console.log(timestamp.end - timestamp.start, length_reading, duration_min, cpm);
-            if (cpm <= 600) {
-                gauge.set(cpm); // set actual value
-                // feedback_speech
-                if (is_audio_feedback_activated) {
-                    feedback_speech.speak(str(parseInt(cpm)));
+            let duration_min = (1000 * 60) / (timestamp.end - timestamp.start);
+            let speaking_duration = timestamp.end - timestamp.start;
+            if (length_reading > 20) {
+                cpm = length_reading * duration_min;
+                if (cpm > threshold.cpm) {
+                    createToast("ゆっくり話してください");
+                    chart_warning_count.data.datasets[0].data[0]++;
                 }
+                //console.log(timestamp.end - timestamp.start, length_reading, duration_min, cpm);
+                if (cpm <= 600) {
+                    gauge.set(cpm); // set actual value
+                    // feedback_speech
+                    if (is_audio_feedback_activated) {
+                        feedback_speech.speak(str(parseInt(cpm)));
+                    }
 
-                line_chart.data.labels.push(str(parseInt(millis() / 1000)));
-                line_chart.data.datasets[0].data.push(cpm);
-                if (line_chart.data.labels.length > 20000) {
-                    line_chart.data.labels.shift();
+                    line_chart.data.labels.push(str(parseInt(millis() / 1000)));
+                    line_chart.data.datasets[0].data.push(cpm);
+                    if (line_chart.data.labels.length > 20000) {
+                        line_chart.data.labels.shift();
+                    }
+                    if (line_chart.data.datasets[0].data.length > 20000) {
+                        line_chart.data.datasets[0].data.shift();
+                    }
+                    line_chart.update();
                 }
-                if (line_chart.data.datasets[0].data.length > 20000) {
-                    line_chart.data.datasets[0].data.shift();
-                }
-                line_chart.update();
             }
-
 
             // 話した言葉に、指示代名詞が含まれる場合はグラフにカウントする
             // フィラーの場合は警告

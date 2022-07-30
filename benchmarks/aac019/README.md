@@ -26,6 +26,3 @@
 ![target CPM:300](./yomi01_237_300.png)
 ![target CPM:350](./yomi01_237_350.png)
 ![target CPM:400](./yomi01_237_400.png)
-
-
-
