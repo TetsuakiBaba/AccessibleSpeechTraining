@@ -45,6 +45,10 @@ function setup() {
     // graphics stuff:
     noCanvas();
 
+    if (userAgent.indexOf('chrome') != -1) { } else {
+        window.confirm("ブラウザをChromeで開き直してください。このページはChrome（macOS,windows,android,chromeOS）ブラウザのみで動作します。This page works only on Chrome browser.");
+    }
+
     myRec.onEnd = endSpeech;
     myRec.onStart = startSpeech();
     myRec.onSoundStart = function () {
