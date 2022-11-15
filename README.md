@@ -7,6 +7,11 @@ Accessible Speech Trainingはノートテイクを前提とした発表会や授
 ## DEMO
   * https://tetsuakibaba.jp/project/accessibleSpeech
 
+## 動作環境
+iOSを除く全てのChromeブラウザ上で動作します．iPadやiPhone等のiOSではChromeブラウザで閲覧しても動作しませんのでお気をつけください．
+  * 動作確認OS: macOS, Windows, Android, ChromeOS
+
+
 ## Benchmark集
 本システムのCPM換算の妥当性を評価するためにいくつかのベンチマークをこちらに記載します。
 
