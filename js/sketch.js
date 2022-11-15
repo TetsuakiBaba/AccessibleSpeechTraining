@@ -1,10 +1,7 @@
-/*
-my google script url for free translation 
-https://script.google.com/d/14bneey4l1045Kf9tXrfIbD81jwk3Xdh4W44LoYGt65a5oVHb37CcOWN5/edit?splash=yes#
+var last_modified = `
+Last modified: 2022/11/15 09:58:35
+`
 
-languageApp detail info, you can check all list of language codes.
-https://developers.google.com/apps-script/reference/language/language-app
-*/
 var myRec = new p5.SpeechRec('', parseResult); // new P5.SpeechRec object
 var is_recognition_activated = false;
 var timestamp = {
@@ -45,9 +42,12 @@ function setup() {
     // graphics stuff:
     noCanvas();
 
+    var userAgent = window.navigator.userAgent.toLowerCase();
     if (userAgent.indexOf('chrome') != -1) { } else {
         window.confirm("ブラウザをChromeで開き直してください。このページはChrome（macOS,windows,android,chromeOS）ブラウザのみで動作します。This page works only on Chrome browser.");
     }
+
+    document.querySelector('#last_modified').innerText = last_modified;
 
     myRec.onEnd = endSpeech;
     myRec.onStart = startSpeech();
