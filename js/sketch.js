@@ -1,5 +1,5 @@
 var last_modified = `
-Last modified: 2022/11/15 09:58:35
+Last modified: 2023/06/29 08:41:40
 `
 
 var myRec = new p5.SpeechRec('', parseResult); // new P5.SpeechRec object
@@ -25,6 +25,7 @@ function preload() {
     }
     kuromoji.builder({ dicPath: "./kuromoji/dict/", ungzip: ungzip }).build(function (err, tokenizer) {
         // tokenizer is ready
+        console.log("tokenizer is ready");
         kuro = tokenizer;
         var path = tokenizer.tokenize("準備できたよ");
         select("#dict_loading").hide();
