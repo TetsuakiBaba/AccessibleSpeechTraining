@@ -5,7 +5,7 @@
 Accessible Speech Trainingはノートテイクを前提とした発表会や授業等において、アクセシブルな発話を支援する為のウェブアプリケーションです。
 
 ## DEMO
-  * https://bttb.sakura.ne.jp/accessibleSpeech/
+  * https://tetsuakibaba.github.io/AccessibleSpeechTraining/
 
 ## 動作環境
 iOSを除く全てのChromeブラウザ上で動作します．iPadやiPhone等のiOSではChromeブラウザで閲覧しても動作しませんのでお気をつけください．
